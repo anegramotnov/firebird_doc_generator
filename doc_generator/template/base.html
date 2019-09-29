@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}Документация базы данных слоя{% endblock %}</title>
+  <title>{% block title %}Документация базы данных{% endblock %}</title>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">
   <style type="text/css">
@@ -24,7 +24,6 @@
       $('#procedure_table').DataTable(
         {
           "lengthMenu": [[50, 100, -1], [50, 100, "All"]],
-          //"paging": false,
           "fixedHeader": {
             "header": true,
             "footer": true
@@ -36,13 +35,12 @@
 </head>
 <body style="font-family: monospace">
   <header>
-    <h1>{% block h1 %}Документация базы данных слоя{% endblock %}</h1>
+    <h1>{% block h1 %}Документация базы данных{% endblock %}</h1>
   </header>
   <nav>
     <a href="index.html">Главная</a>
     | <a href="procedures.html">Процедуры</a>
     | <a href="tables.html">Таблицы</a>
-<!--    <a href="#">Триггеры</a> |-->
   </nav>
   <h2>{% block h2 %}{% endblock %}</h2>
   {% block content %}
