@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block h2 %}Процедуры{% endblock %}
+{% block content %}
+  <p>
+    Процедур: {{ procedures_summary.total_count }} <br>
+    Процедур с описанием: {{ procedures_summary.description_count }} <br>
+  </p>
+  <table class="row-border cell-border stripe" id="procedure_table">
+    <thead>
+      <tr>
+        <th>Процедура</th>
+        <th>Описание</th>
+        <th>Входные параметры</th>
+        <th>Выходные параметры</th>
+        <th>Зависит от процедур</th>
+        <th>Зависит от таблиц</th>
+        <th>Зависит от UDF</th>
+        <th>Объем кода</th>
+        <th>Верхний регистр</th>
+        <th>Нижний регистр</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for procedure_name, procedure in procedures.items() -%}
+        <tr>
+          <td>
+            <a name="procedure-{{ procedure.name }}" href="procedure-{{ procedure.name }}.html">{{ procedure.name }}</a>
+          </td>
+          <td>{{ 'Есть' if procedure.description else 'Нет' }}</td>
+          <td>{{ procedure.parameters.input|count }}</td>
+          <td>{{ procedure.parameters.output|count}}</td>
+          <td>{{ procedure.dependencies.procedure|count}}</td>
+          <td>{{ procedure.dependencies.table|count }}</td>
+          <td>{{ procedure.dependencies.udf|count }}</td>
+          <td>{{ procedure.source.length }}</td>
+          <td>{{ procedure.source.upper_percent|round }}%</td>
+          <td>{{ procedure.source.lower_percent|round }}%</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Процедура</th>
+        <th>Описание</th>
+        <th>Входные параметры</th>
+        <th>Выходные параметры</th>
+        <th>Зависит от процедур</th>
+        <th>Зависит от таблиц</th>
+        <th>Зависит от UDF</th>
+        <th>Объем кода</th>
+        <th>Верхний регистр</th>
+        <th>Нижний регистр</th>
+      </tr>
+    </tfoot>
+  </table>
+
+{% endblock %}

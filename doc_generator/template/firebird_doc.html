@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Документация БД слоя</title>
+</head>
+<body style="font-family: monospace">
+  <header>
+    <h1>Документация БД слоя</h1>
+  </header>
+  <nav>
+    <h2>Оглавление</h2>
+    <ul>
+      <li><a href="#procedures">Процедуры</a></li>
+      <li><a href="#procedures">Триггеры</a></li>
+      <li><a href="#procedures">Таблицы</a></li>
+    </ul>
+    <h3><a name="procedures" href="#procedures">Процедуры</a></h3>
+    <p>
+      Процедур: {{ procedures_summary.total_count }} <br>
+      Процедур с описанием: {{ procedures_summary.description_count }} <br>
+      Процедур с нерекомендованными функциями rfunc (z, c, maxnum, minnum): ? <br>
+      Процедур с CAMELCASE (не считая строковые константы): ? <br>
+    </p>
+  </nav>
+  <dl>
+    {% for procedure_name, procedure in procedures.items() -%}
+    <dt>
+
+    </dt>
+    <dd>
+      Описание: {{ procedure.description or '--' }} <br>
+      Использует таблицы:
+      {% if procedure.dependencies.table %}
+      {% for d_table in procedure.dependencies.table %}
+          {{ d_table.name }}{{ ", " if not loop.last }}
+      {% endfor %}
+      {% else %}
+        --
+      {% endif %}
+      <br>
+      Использует UDF:
+      {% if procedure.dependencies.udf %}
+      {% for d_udf in procedure.dependencies.udf %}
+        {%- if d_udf.name in ('C', 'Z', 'MINNUM', 'MAXNUM') -%}
+          <span style="color: red">{{ d_udf.name }}</span>
+        {%- else -%}
+          <span>{{ d_udf.name }}</span>
+        {%- endif -%}
+          {{ ", " if not loop.last }}
+      {% endfor %}
+      {% else %}
+        --
+      {% endif %}
+      <br>
+      Использует процедуры:
+      <ul>
+        {% for dependency_procedure in procedure.dependencies.procedure %}
+          <li>{{ dependency_procedure.name }}</li>
+        {% endfor %}
+      </ul>
+      Дерево:
+      {%- if procedure.dependency_tree -%}
+        <ul>
+        {%- for dependency in procedure.dependency_tree recursive -%}
+          <li>
+            <a href="#procedure-{{ dependency.name }}">{{ dependency.name }}</a>
+            {% if dependency.fields %}
+             ->
+            {% for field in dependency.fields %}
+              {{ field.lower() }}{{ ", " if not loop.last }}
+            {%- endfor -%}
+            {%- endif -%}
+              {% if dependency.is_cycled %}
+                [циклическая зависимость]
+              {% elif dependency.in_depth_limit %}
+                [ветка обрезана...]
+              {%- endif -%}
+            {% if dependency.dependency_tree %}
+              <ul>{{ loop(dependency.dependency_tree) }}</ul>
+            {% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      {% else %}
+        --
+      {% endif %}<br>
+
+      Карта полей:
+      <ul>
+      {% for item in procedure._dependency_field_map.items() %}
+        <li>
+          {{ item }}
+        </li>
+      {% endfor %}
+      </ul>
+
+    </dd>
+<!--    <dd>-->
+<!--        Процедур зависит: {{ procedure.depended_procedures or 0 }}-->
+<!--    </br>-->
+<!--        Триггеров зависит: {{ procedure.depended_triggers or 0 }}-->
+<!--    </dd>-->
+    <hr>
+    {% endfor %}
+  </dl>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block h2 %}Таблицы{% endblock %}
+{% block content %}
+  <p>
+    Таблиц: {{ tables_summary.total_count }} <br>
+    Taблиц с описанием: {{ tables_summary.description_count }} <br>
+  </p>
+  <table class="row-border cell-border stripe" id="procedure_table">
+    <thead>
+      <tr>
+        <th>Таблица</th>
+        <th>Описание</th>
+        <th>Количество полей</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for table in tables -%}
+        <tr>
+          <td>
+            <a name="table-{{ table.name }}" href="table-{{ table.name }}.html">{{ table.name }}</a>
+          </td>
+          <td>{{ table.description }}</td>
+          <td>{{ table.fields|count }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Таблица</th>
+        <th>Описание</th>
+        <th>Количество полей</th>
+      </tr>
+    </tfoot>
+  </table>
+
+{% endblock %}

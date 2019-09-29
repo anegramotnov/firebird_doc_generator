@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block h2 %}Процедура {{ procedure.name }}{% endblock %}
+{% block content %}
+<a name="procedure-{{ procedure.name }}" href="procedure-{{ procedure.name }}.html">{{ procedure.name }}</a>(
+{%- for input_parameter in procedure.parameters.input -%}
+  {{ input_parameter.name }}{{ ", " if not loop.last }}
+  {%- endfor -%}) ->
+  {% for output_parameter in procedure.parameters.output -%}
+    {%- if output_parameter.used -%}
+      {{ output_parameter.name }}{{ ", " if not loop.last }}
+    {%- else -%}
+      <span style="color: gray">{{ output_parameter.name }}</span>{{ ", " if not loop.last }}
+    {%- endif -%}
+{%- endfor -%} <br>
+* Неиспользуемые в других процедурах параметры выделены <span style="color: gray">серым</span>
+
+<hr>
+
+<p>
+    Описание: {{ procedure.description or '--' }} <br>
+  Использует таблицы:
+  {% if procedure.dependencies.table %}
+  {% for d_table in procedure.dependencies.table %}
+      {{ d_table.name }}{{ ", " if not loop.last }}
+  {% endfor %}
+  {% else %}
+    --
+  {% endif %}
+  <br>
+  Использует UDF:
+  {% if procedure.dependencies.udf %}
+  {% for d_udf in procedure.dependencies.udf %}
+    {%- if d_udf.name in ('C', 'Z', 'MINNUM', 'MAXNUM') -%}
+      <span style="color: red">{{ d_udf.name }}</span>
+    {%- else -%}
+      <span>{{ d_udf.name }}</span>
+    {%- endif -%}
+      {{ ", " if not loop.last }}
+  {% endfor %}
+  {% else %}
+    --
+  {% endif %}
+  <br>
+  Использует процедуры:
+  {%- if procedure.dependency_tree -%}
+    <ul>
+    {%- for dependency in procedure.dependency_tree recursive -%}
+      <li>
+        <a href="procedure-{{ dependency.name }}.html">{{ dependency.name }}</a>
+        {% if dependency.fields %}
+         ->
+        {% for field in dependency.fields %}
+          {{ field.lower() }}{{ ", " if not loop.last }}
+        {%- endfor -%}
+        {%- endif -%}
+          {% if dependency.is_cycled %}
+            [циклическая зависимость]
+          {% elif dependency.in_depth_limit %}
+            [ветка обрезана...]
+          {%- endif -%}
+        {% if dependency.dependency_tree %}
+          <ul>{{ loop(dependency.dependency_tree) }}</ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    --
+  {% endif %}<br>
+</p>
+
+{% endblock %}

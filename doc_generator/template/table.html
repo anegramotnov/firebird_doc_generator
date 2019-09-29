@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block h2 %}Таблица {{ table.name }}{% endblock %}
+{% block content %}
+<p>
+    Описание: {{ table.description or '--' }}
+</p>
+
+  <table class="row-border cell-border stripe" id="procedure_table">
+    <thead>
+      <tr>
+        <th>Поле</th>
+        <th>Тип</th>
+        <th>Описание</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for field in table.fields -%}
+        <tr>
+          <td>{{ field.name }}</td>
+          <td>{{ field.type }}</td>
+          <td>{{ field.description }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Поле</th>
+        <th>Тип</th>
+        <th>Описание</th>
+      </tr>
+    </tfoot>
+  </table>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Документация базы данных слоя{% endblock %}</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.5/css/fixedHeader.dataTables.min.css">
+  <style type="text/css">
+    th {
+      border-top: 1px solid #dddddd;
+      border-bottom: 1px solid #dddddd;
+      border-right: 1px solid #dddddd;
+    }
+    th:first-child {
+      border-left: 1px solid #dddddd;
+    }
+  </style>
+
+  <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready( function () {
+      $('#procedure_table').DataTable(
+        {
+          "lengthMenu": [[50, 100, -1], [50, 100, "All"]],
+          //"paging": false,
+          "fixedHeader": {
+            "header": true,
+            "footer": true
+          }
+        }
+      );
+    });
+  </script>
+</head>
+<body style="font-family: monospace">
+  <header>
+    <h1>{% block h1 %}Документация базы данных слоя{% endblock %}</h1>
+  </header>
+  <nav>
+    <a href="index.html">Главная</a>
+    | <a href="procedures.html">Процедуры</a>
+    | <a href="tables.html">Таблицы</a>
+<!--    <a href="#">Триггеры</a> |-->
+  </nav>
+  <h2>{% block h2 %}{% endblock %}</h2>
+  {% block content %}
+  {% endblock %}
+</body>
+</html>
