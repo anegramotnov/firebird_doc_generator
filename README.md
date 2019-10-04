@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/anegramotnov/firebird_doc_generator.svg?branch=master)](https://travis-ci.org/anegramotnov/firebird_doc_generator)
+[![codecov](https://codecov.io/gh/anegramotnov/firebird_doc_generator/branch/master/graph/badge.svg)](https://codecov.io/gh/anegramotnov/firebird_doc_generator)
+
 # Генератор документации для файлов баз данных Firebird
 
 ### Запуск:
